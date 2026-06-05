@@ -3,6 +3,7 @@ using UnityEngine;
 namespace Platformer
 {
     [RequireComponent(typeof(CharacterView))]
+
     public class EnemyPatrol : MonoBehaviour
     {
         [SerializeField] private Transform _leftPoint;
