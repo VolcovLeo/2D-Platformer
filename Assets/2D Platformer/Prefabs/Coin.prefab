@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 818934064857773911}
   - component: {fileID: 818934064857773912}
   - component: {fileID: 818934064857773909}
-  - component: {fileID: 6853454717223029712}
+  - component: {fileID: 157249840811185006}
   m_Layer: 0
   m_Name: Coin
   m_TagString: Coin
@@ -153,7 +153,7 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
---- !u!114 &6853454717223029712
+--- !u!114 &157249840811185006
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}

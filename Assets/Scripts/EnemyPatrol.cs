@@ -2,24 +2,31 @@ using UnityEngine;
 
 namespace Platformer
 {
+    [RequireComponent(typeof(CharacterView))]
     public class EnemyPatrol : MonoBehaviour
     {
-        [SerializeField] private Transform leftPoint;
-        [SerializeField] private Transform rightPoint;
-        [SerializeField] private float speed = 2f;
+        [SerializeField] private Transform _leftPoint;
+        [SerializeField] private Transform _rightPoint;
+        [SerializeField] private float _speed = 2f;
 
-        private Transform target;
+        private CharacterView _view;
+        private Transform _target;
 
         private void Start()
         {
-            target = rightPoint;
+            _view = GetComponent<CharacterView>();
+            _target = _rightPoint;
         }
 
         private void Update()
         {
-            transform.position = Vector3.MoveTowards(transform.position, target.position, speed * Time.deltaTime);
+            Vector3 direction = (_target.position - transform.position).normalized;
+            _view.SetDirection(direction.x);
+            transform.position = Vector3.MoveTowards(transform.position, _target.position, _speed * Time.deltaTime);
 
-            if (Vector3.Distance(transform.position, target.position) < 0.05f)
+            float distance = (_target.position - transform.position).sqrMagnitude;
+
+            if (distance < 0.01f)
             {
                 SwitchTarget();
             }
@@ -27,7 +34,7 @@ namespace Platformer
 
         private void SwitchTarget()
         {
-            target = target == leftPoint ? rightPoint : leftPoint;
+            _target = _target == _leftPoint ? _rightPoint : _leftPoint;
         }
     }
 }

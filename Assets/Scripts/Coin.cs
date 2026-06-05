@@ -9,9 +9,9 @@ namespace Platformer
 
         private bool _isCollected;
 
-        private void Awake()
+        private void OnEnable()
         {
-            gameObject.tag = "Coin";
+            _isCollected = false;
         }
 
         private void OnTriggerEnter2D(Collider2D other)
@@ -19,7 +19,7 @@ namespace Platformer
             if (_isCollected)
                 return;
 
-            if (other.TryGetComponent<PlayerController>(out var player))
+            if (other.TryGetComponent(out PlayerController player))
             {
                 _isCollected = true;
                 Collected?.Invoke(this);

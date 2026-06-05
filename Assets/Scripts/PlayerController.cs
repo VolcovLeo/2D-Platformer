@@ -2,53 +2,47 @@ using UnityEngine;
 
 namespace Platformer
 {
+    [RequireComponent(typeof(Rigidbody2D))]
+    [RequireComponent(typeof(CharacterView))]
     public class PlayerController : MonoBehaviour
     {
-        public float movingSpeed = 5f;
-        public float jumpForce = 5f;
+        [SerializeField] private float _movingSpeed = 5f;
+        [SerializeField] private float _jumpForce = 5f;
+        [SerializeField] private Transform _groundCheck;
+        [SerializeField] private InputService _inputService;
 
-        private float moveInput;
-        private bool facingRight = false;
-        private bool isGrounded;
+        private Rigidbody2D _rigidbody;
+        private Animator _animator;
+        private CharacterView _view;
 
-        [HideInInspector]
-        public bool deathState = false;
+        private bool _isGrounded;
 
-        public Transform groundCheck;
+        public bool DeathState { get; private set; }
 
-        private Rigidbody2D rigidbody;
-        private Animator animator;
-
-        void Start()
+        private void Start()
         {
-            rigidbody = GetComponent<Rigidbody2D>();
-            animator = GetComponent<Animator>();
+            _rigidbody = GetComponent<Rigidbody2D>();
+            _animator = GetComponent<Animator>();
+            _view = GetComponent<CharacterView>();
         }
 
-        void Update()
+        private void Update()
         {
-            moveInput = Input.GetAxisRaw("Horizontal");
-            transform.position += new Vector3(moveInput, 0, 0) * movingSpeed * Time.deltaTime;
+            float moveInput = _inputService.HorizontalInput;
 
-            if (animator != null)
+            transform.position += new Vector3(moveInput, 0f, 0f) * _movingSpeed * Time.deltaTime;
+
+            UpdateAnimation(moveInput);
+
+            if (_inputService.JumpPressed && _isGrounded)
             {
-                if (!isGrounded)
-                    animator.SetInteger("playerState", 2); 
-                else if (moveInput != 0)
-                    animator.SetInteger("playerState", 1); 
-                else
-                    animator.SetInteger("playerState", 0); 
+                _rigidbody.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
             }
 
-            if (Input.GetKeyDown(KeyCode.Space) && isGrounded)
+            if (moveInput != 0)
             {
-                rigidbody.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
+                _view.SetDirection(moveInput);
             }
-
-            if (moveInput > 0 && !facingRight)
-                Flip();
-            else if (moveInput < 0 && facingRight)
-                Flip();
         }
 
         private void FixedUpdate()
@@ -56,33 +50,37 @@ namespace Platformer
             CheckGround();
         }
 
-        private void Flip()
+        private void UpdateAnimation(float moveInput)
         {
-            facingRight = facingRight == false;
-            Vector3 scale = transform.localScale;
-            scale.x *= -1;
-            transform.localScale = scale;
+            if (_animator == null)
+                return;
+
+            if (_isGrounded == false)
+            {
+                _animator.SetInteger("playerState", 2);
+            }
+            else if (moveInput != 0)
+            {
+                _animator.SetInteger("playerState", 1);
+            }
+            else
+            {
+                _animator.SetInteger("playerState", 0);
+            }
         }
 
         private void CheckGround()
         {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(groundCheck.position, 0.2f);
-            isGrounded = colliders.Length > 1;
+            Collider2D[] colliders = Physics2D.OverlapCircleAll(_groundCheck.position, 0.2f);
+
+            _isGrounded = colliders.Length > 1;
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            if (collision.gameObject.CompareTag("Enemy"))
+            if (collision.gameObject.TryGetComponent(out Enemy enemy))
             {
-                deathState = true;
-            }
-        }
-
-        private void OnTriggerEnter2D(Collider2D other)
-        {
-            if (other.CompareTag("Coin"))
-            {
-                Destroy(other.gameObject);
+                DeathState = true;
             }
         }
     }
