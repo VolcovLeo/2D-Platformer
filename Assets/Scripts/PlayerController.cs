@@ -4,6 +4,7 @@ namespace Platformer
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(CharacterView))]
+
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private float _movingSpeed = 5f;
