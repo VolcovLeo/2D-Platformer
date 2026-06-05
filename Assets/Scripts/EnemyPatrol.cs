@@ -13,21 +13,26 @@ namespace Platformer
         private CharacterView _view;
         private Transform _target;
 
-        private void Start()
+        private void Awake()
         {
             _view = GetComponent<CharacterView>();
+        }
+
+        private void Start()
+        {
             _target = _rightPoint;
         }
 
         private void Update()
         {
             Vector3 direction = (_target.position - transform.position).normalized;
+
             _view.SetDirection(direction.x);
             transform.position = Vector3.MoveTowards(transform.position, _target.position, _speed * Time.deltaTime);
 
-            float distance = (_target.position - transform.position).sqrMagnitude;
+            float distanceSquared = (_target.position - transform.position).sqrMagnitude;
 
-            if (distance < 0.01f)
+            if (distanceSquared < 0.01f)
             {
                 SwitchTarget();
             }

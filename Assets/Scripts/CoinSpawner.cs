@@ -46,15 +46,15 @@ namespace Platformer
         {
             Transform closestPoint = _spawnPoints[0];
 
-            float minDistance = (closestPoint.position - position).sqrMagnitude;
+            float minDistanceSquared = (closestPoint.position - position).sqrMagnitude;
 
             foreach (Transform point in _spawnPoints)
             {
-                float distance = (point.position - position).sqrMagnitude;
+                float distanceSquared = (point.position - position).sqrMagnitude;
 
-                if (distance < minDistance)
+                if (distanceSquared < minDistanceSquared)
                 {
-                    minDistance = distance;
+                    minDistanceSquared = distanceSquared;
                     closestPoint = point;
                 }
             }

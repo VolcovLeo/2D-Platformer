@@ -4,11 +4,11 @@ namespace Platformer
 {
     public class CharacterView : MonoBehaviour
     {
-        private const float DefaultRotationY = 0f;
-        private const float FlippedRotationY = 180f;
-
         [SerializeField] private bool _spriteLooksRightByDefault;
         [SerializeField] private bool _lookRightOnStart = true;
+
+        private const float DefaultRotationY = 0f;
+        private const float FlippedRotationY = 180f;
 
         private void Start()
         {

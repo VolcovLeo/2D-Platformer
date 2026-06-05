@@ -4,41 +4,47 @@ namespace Platformer
 {
     [RequireComponent(typeof(Rigidbody2D))]
     [RequireComponent(typeof(CharacterView))]
+    [RequireComponent(typeof(PlayerAnimator))]
 
     public class PlayerController : MonoBehaviour
     {
         [SerializeField] private float _movingSpeed = 5f;
         [SerializeField] private float _jumpForce = 5f;
-        [SerializeField] private Transform _groundCheck;
         [SerializeField] private InputService _inputService;
+        [SerializeField] private GroundChecker _groundChecker;
 
         private Rigidbody2D _rigidbody;
-        private Animator _animator;
         private CharacterView _view;
+        private PlayerAnimator _playerAnimator;
 
         private bool _isGrounded;
 
         public bool DeathState { get; private set; }
 
-        private void Start()
+        private void Awake()
         {
             _rigidbody = GetComponent<Rigidbody2D>();
-            _animator = GetComponent<Animator>();
             _view = GetComponent<CharacterView>();
+            _playerAnimator = GetComponent<PlayerAnimator>();
         }
 
         private void Update()
         {
+            Move();
+            Jump();
+            UpdateAnimationState();
+        }
+
+        private void FixedUpdate()
+        {
+            _isGrounded = _groundChecker.IsGroundDetected();
+        }
+
+        private void Move()
+        {
             float moveInput = _inputService.HorizontalInput;
 
-            transform.position += new Vector3(moveInput, 0f, 0f) * _movingSpeed * Time.deltaTime;
-
-            UpdateAnimation(moveInput);
-
-            if (_inputService.JumpPressed && _isGrounded)
-            {
-                _rigidbody.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
-            }
+            transform.position += Vector3.right * moveInput * _movingSpeed * Time.deltaTime;
 
             if (moveInput != 0)
             {
@@ -46,35 +52,31 @@ namespace Platformer
             }
         }
 
-        private void FixedUpdate()
+        private void Jump()
         {
-            CheckGround();
-        }
-
-        private void UpdateAnimation(float moveInput)
-        {
-            if (_animator == null)
+            if (_inputService.JumpPressed == false)
                 return;
 
             if (_isGrounded == false)
+               return;
+
+            _rigidbody.AddForce(Vector2.up * _jumpForce, ForceMode2D.Impulse);
+        }
+
+        private void UpdateAnimationState()
+        {
+            if (_isGrounded == false)
             {
-                _animator.SetInteger("playerState", 2);
+                _playerAnimator.PlayJump();
             }
-            else if (moveInput != 0)
+            else if (_inputService.HorizontalInput != 0)
             {
-                _animator.SetInteger("playerState", 1);
+                _playerAnimator.PlayRun();
             }
             else
             {
-                _animator.SetInteger("playerState", 0);
+                _playerAnimator.PlayIdle();
             }
-        }
-
-        private void CheckGround()
-        {
-            Collider2D[] colliders = Physics2D.OverlapCircleAll(_groundCheck.position, 0.2f);
-
-            _isGrounded = colliders.Length > 1;
         }
 
         private void OnCollisionEnter2D(Collision2D collision)
