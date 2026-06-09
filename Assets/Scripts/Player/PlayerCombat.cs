@@ -8,10 +8,20 @@ namespace Platformer
         [SerializeField] private float _attackRadius = 1.5f;
         [SerializeField] private int _damage = 20;
 
+        private Health _health;
+
         private void Awake()
         {
-            Health health = GetComponent<Health>();
-            health.Died += Die;
+            _health = GetComponent<Health>();
+            _health.Died += Die;
+        }
+
+        private void OnDestroy()
+        {
+            if (_health != null)
+            {
+                _health.Died -= Die;
+            }
         }
 
         private void Update()
