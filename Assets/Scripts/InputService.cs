@@ -4,8 +4,10 @@ namespace Platformer
 {
     public class InputService : MonoBehaviour
     {
+
         private const string HorizontalAxis = "Horizontal";
 
+        public bool AttackPressed { get; private set; }
         public float HorizontalInput { get; private set; }
         public bool JumpPressed { get; private set; }
 
@@ -13,6 +15,7 @@ namespace Platformer
         {
             HorizontalInput = Input.GetAxisRaw(HorizontalAxis);
             JumpPressed = Input.GetKeyDown(KeyCode.Space);
+            AttackPressed = Input.GetMouseButtonDown(0);
         }
     }
 }

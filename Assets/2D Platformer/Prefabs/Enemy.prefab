@@ -16,6 +16,10 @@ GameObject:
   - component: {fileID: 2367412024886369351}
   - component: {fileID: 3460558720446842419}
   - component: {fileID: -4813445122427035804}
+  - component: {fileID: 1535155591267640494}
+  - component: {fileID: -6613801818869508185}
+  - component: {fileID: 2579262721445929205}
+  - component: {fileID: 2804683398171837635}
   m_Layer: 0
   m_Name: Enemy
   m_TagString: Enemy
@@ -242,4 +246,61 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4ae996db66a617f408b89ddc14467ea7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _spriteLooksRightByDefault: 0
   _lookRightOnStart: 1
+--- !u!114 &1535155591267640494
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7873588928898685938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3ae7c9a4d61b67547971e9391f6fac13, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _maxHealth: 100
+--- !u!114 &-6613801818869508185
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7873588928898685938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2eef51b4b92fde242b3df1ec2c6b08a0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _attackDistance: 1
+  _damage: 10
+  _attackCooldown: 1
+--- !u!114 &2579262721445929205
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7873588928898685938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dd401a0fca1d99c499ad32d8546ec0e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _visionDistance: 5
+--- !u!114 &2804683398171837635
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7873588928898685938}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf8011e520901e14d802bc577ce48d8e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _leftPoint: {fileID: 0}
+  _rightPoint: {fileID: 0}
+  _speed: 2

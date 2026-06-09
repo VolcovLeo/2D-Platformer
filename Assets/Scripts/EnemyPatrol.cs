@@ -3,6 +3,7 @@ using UnityEngine;
 namespace Platformer
 {
     [RequireComponent(typeof(CharacterView))]
+    [RequireComponent(typeof(EnemyChaser))]
 
     public class EnemyPatrol : MonoBehaviour
     {
@@ -11,11 +12,14 @@ namespace Platformer
         [SerializeField] private float _speed = 2f;
 
         private CharacterView _view;
+        private EnemyChaser _chaser;
+
         private Transform _target;
 
         private void Awake()
         {
             _view = GetComponent<CharacterView>();
+            _chaser = GetComponent<EnemyChaser>();
         }
 
         private void Start()
@@ -25,10 +29,19 @@ namespace Platformer
 
         private void Update()
         {
-            Vector3 direction = (_target.position - transform.position).normalized;
+            if (_chaser.CanSeePlayer)
+            {
+                MoveTo(_chaser.GetPlayer());
+            }
+            else
+            {
+                Patrol();
+            }
+        }
 
-            _view.SetDirection(direction.x);
-            transform.position = Vector3.MoveTowards(transform.position, _target.position, _speed * Time.deltaTime);
+        private void Patrol()
+        {
+            MoveTo(_target);
 
             float distanceSquared = (_target.position - transform.position).sqrMagnitude;
 
@@ -40,7 +53,21 @@ namespace Platformer
 
         private void SwitchTarget()
         {
-            _target = _target == _leftPoint ? _rightPoint : _leftPoint;
+            if (_target == _leftPoint)
+            {
+                _target = _rightPoint;
+            }
+            else
+            {
+                _target = _leftPoint;
+            }
+        }
+
+        private void MoveTo(Transform target)
+        {
+            Vector3 direction = (target.position - transform.position).normalized;
+            _view.SetDirection(direction.x);
+            transform.position = Vector3.MoveTowards(transform.position, target.position, _speed * Time.deltaTime);
         }
     }
 }
